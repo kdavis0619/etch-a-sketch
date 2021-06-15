@@ -1,11 +1,27 @@
 const mainContainer = document.getElementById("main");
+const buttonContainer = document.getElementById("colorPicker");
+const colorArray = ["Black", "Red", "Blue", "Green", "White"];
+let currentColor = "black";
+
+function addColors() {
+  colorArray.forEach((element) => {
+    let newButton = document.createElement("button");
+    newButton.id = element.toLowerCase();
+    newButton.classList.add("button");
+    newButton.innerText = element;
+    newButton.addEventListener("click", (event) => {
+      currentColor = event.target.id;
+    });
+    buttonContainer.appendChild(newButton);
+  });
+}
+
 function setDefaultGrid() {
   setGridSize(50);
   fillGrid(50);
 }
 function setGridSize(inputSize) {
   mainContainer.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
-  mainContainer.style.gridTemplateRows = `repeat(${inputSize}, 1fr)`;
 }
 
 function fillGrid(inputSize) {
@@ -13,7 +29,8 @@ function fillGrid(inputSize) {
     let newDiv = document.createElement("div");
     newDiv.classList.add("grid-element");
     newDiv.addEventListener("mouseover", (event) => {
-      event.target.classList.add("grid-element-colored");
+      event.target.classList.remove("grid-element");
+      event.target.style.backgroundColor = currentColor;
     });
     mainContainer.appendChild(newDiv);
   }
@@ -22,7 +39,8 @@ function fillGrid(inputSize) {
 function clearGrid() {
   const gridArray = Array.from(mainContainer.childNodes);
   gridArray.forEach((element) => {
-    element.classList.remove("grid-element-colored");
+    element.className = "grid-element";
+    element.style.backgroundColor = "#40434e";
   });
 }
 
@@ -37,4 +55,6 @@ function changeGrid() {
   setGridSize(size);
   fillGrid(size);
 }
-window.addEventListener("load", setDefaultGrid());
+window.addEventListener("load", () => {
+  setDefaultGrid(), addColors();
+});
