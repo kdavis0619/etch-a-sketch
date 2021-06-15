@@ -1,27 +1,40 @@
 const mainContainer = document.getElementById("main");
-let inputGridSize = parseInt(prompt("What size grid? for a 3x3, type 3."));
-function generateGrid(inputNum) {
-  if (inputNum > 100) {
-    warningDiv = document.createElement("div");
-    warningDiv.innerText = "Value must be 100 or less!";
-    mainContainer.appendChild(warningDiv);
-    return;
-  }
-  let gridSize = inputNum * inputNum;
-  let rowCounter = 1;
-  let colCounter = 1;
-  mainContainer.style.gridTemplateColumns = `repeat(${inputNum}, 1fr)`;
-  mainContainer.style.gridTemplateRows = `repeat(${inputNum}, 1fr)`;
+function setDefaultGrid() {
+  setGridSize(50);
+  fillGrid(50);
+}
+function setGridSize(inputSize) {
+  mainContainer.style.gridTemplateColumns = `repeat(${inputSize}, 1fr)`;
+  mainContainer.style.gridTemplateRows = `repeat(${inputSize}, 1fr)`;
+}
 
-  for (let i = 0; i < gridSize + 1; i++) {
+function fillGrid(inputSize) {
+  for (let i = 0; i < inputSize * inputSize; i++) {
     let newDiv = document.createElement("div");
-    newDiv.id = "box" + i;
-    newDiv.className = "flexItem";
-    mainContainer.appendChild(newDiv);
+    newDiv.classList.add("grid-element");
     newDiv.addEventListener("mouseover", (event) => {
-      event.target.style.backgroundColor = "black";
+      event.target.classList.add("grid-element-colored");
     });
+    mainContainer.appendChild(newDiv);
   }
 }
 
-generateGrid(inputGridSize);
+function clearGrid() {
+  const gridArray = Array.from(mainContainer.childNodes);
+  gridArray.forEach((element) => {
+    element.classList.remove("grid-element-colored");
+  });
+}
+
+function changeGrid() {
+  let size = parseInt(
+    prompt("What size grid do you want? Enter 3 for a 3x3 grid")
+  );
+  const gridArray = Array.from(mainContainer.childNodes);
+  gridArray.forEach((element) => {
+    mainContainer.removeChild(element);
+  });
+  setGridSize(size);
+  fillGrid(size);
+}
+window.addEventListener("load", setDefaultGrid());
